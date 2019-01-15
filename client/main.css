@@ -1,0 +1,29 @@
+body {
+  padding: 10px;
+  font-family: sans-serif;
+}
+
+.rezize-vertical {
+  resize: vertical;
+}
+
+.login-row {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
+
+.avatar-post-row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.avatar-post-start {
+  display: flex;
+  justify-content: flex-start;
+}
+.avatar-post-end {
+  display: flex;
+  justify-content: flex-end;
+}

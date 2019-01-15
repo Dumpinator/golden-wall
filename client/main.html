@@ -1,0 +1,164 @@
+<head>
+  <title>MonApp</title>
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="text-center">Golden Book</h1>
+    {{#if currentUser }}
+      {{> home_login }}
+    {{else}}
+      {{> home_logout }}
+    {{/if}}
+  </div>
+</body>
+
+<!-- HOME -------------------------------------------------------------------->
+
+<template name="home_login">
+  <div class="login-row">
+    <button class="btn btn-danger js-logout" style="margin: 10px;">Logout</button>
+    <h3><span class="label label-success">{{ currentUser.emails.[0].address }}</span></h3>
+  </div>
+  {{> form_new_post }}
+  {{> display_all_posts }}
+</template>
+
+<template name="home_logout">
+  {{> atForm }}
+  {{> display_all_posts }}
+</template>
+
+<!-- POSTS -------------------------------------------------------------------->
+
+<!-- new post -->
+<template name="form_new_post">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <form class="js-new-post">
+            <div id="name" class="form-group col-sm-6">
+              <label class="control-label" for="username">Name</label>
+              <input class="form-control col-xs-6" type="text" name="name" placeholder="John Doe..">
+            </div>
+            <div id="title" class="form-group col-sm-6">
+              <label class="control-label" for="title">Title</label>
+              <input class="form-control col-xs-6" type="text" name="title" placeholder="Awesome..">
+            </div>
+            <div id="text" class="form-group col-sm-12">
+              <div class="form-group">
+                <label class="control-label" for="text">Text</label>
+                <textarea class="form-control rezize-vertical" name="text" rows="6" placeholder="Blabla.."></textarea>
+              </div>
+              <button class="btn btn-primary" type="submit" name="button">Post</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- single post -->
+<template name="single_post">
+  <div class="panel panel-default js-modal-show-post" style="cursor: pointer;">
+    <div class="panel-heading">
+      <div class="avatar-post-row">
+        <div class="col-md-4">
+          <div class="avatar-post-start">
+            <span class="glyphicon glyphicon-user" style="padding: 10px;"></span>
+            <h4>{{ post.name }}</h4>
+          </div>
+        </div>
+        <div class="col-md-4 text-center">
+          <h4>{{ post.title }}</h4>
+        </div>
+        <div class="col-md-4">
+          <div class="avatar-post-end">
+            <h4 style="font-size: 1em;">{{ fromNow(post.createAt) }}</h4>
+            <span class="glyphicon glyphicon-time" style="padding: 10px;"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <p style="white-space:pre">{{ post.text }}</p>
+    </div>
+  </div>
+</template>
+
+<!-- all posts -->
+<template name="display_all_posts">
+  <div class="row">
+    <h2 style="text-align: -webkit-center;">{{ posts.length }} Posts</h2>
+    {{# each post in posts }}
+      {{> single_post post=post }}
+    {{/ each }}
+  </div>
+</template>
+
+<!-- MODAL -------------------------------------------------------------------->
+
+<!-- show -->
+<template name="modal_show_post">
+  <div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="avatar-post-start col-sm-6">
+            <span class="glyphicon glyphicon-user" style="padding: 10px;"></span>
+            <h4>{{ post.name }}</h4>
+          </div>
+          <div class="avatar-post-end col-sm-6">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 10px 0 10px 10px;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h4>{{ post.title }}</h4>
+            </div>
+            <div class="panel-body">
+              <p style="white-space:pre">{{ post.text }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="avatar-post-start col-sm-6">
+            <span class="glyphicon glyphicon-time" style="padding: 10px;"></span>
+            <h4 style="font-size: 1em;">{{ from(post.createAt) }}</h4>
+          </div>
+            {{#if egal post.ownerId currentUser._id }}
+              <button type="button" class="btn btn-primary js-modal-edit-post">Edit</button>
+              <button type="button" class="btn btn-danger js-delete-post">Delete</button>
+            {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<!-- edit -->
+<template name="modal_edit_post">
+  <div class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form class="js-edit-post">
+          <div class="modal-header">
+            <input class="form-control" type="text" name="title" value="{{ post.title }}">
+          </div>
+          <div class="modal-body">
+            <textarea class="form-control rezize-vertical" name="text" rows="4" cols="50">{{ post.text }}</textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
